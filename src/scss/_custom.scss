@@ -1,0 +1,54 @@
+// Here you can add other styles
+
+// custom .chartjs-tooltip-body-item padding
+@use "charts";
+
+// custom tweaks for scrollbar styling (wip)
+@use "scrollbar";
+
+// Force light mode styles
+:root {
+  --cui-body-bg: #f0f4f7;
+  --cui-body-color: #333;
+  --cui-card-bg: #fff;
+  --cui-tertiary-bg: #f0f4f7;
+}
+
+// Light mode specific styles
+body {
+  color: var(--cui-body-color);
+  background-color: var(--cui-body-bg);
+}
+
+// Make sure all cards have a light background
+.card {
+  background-color: var(--cui-card-bg);
+}
+
+// Ensure text is readable
+.text-muted {
+  color: #6c757d !important;
+}
+
+// Light mode buttons
+.btn-primary {
+  --cui-btn-bg: #0d6efd;
+  --cui-btn-border-color: #0d6efd;
+  --cui-btn-hover-bg: #0b5ed7;
+  --cui-btn-hover-border-color: #0a58ca;
+}
+
+// Header and footer light styling
+.header, .footer {
+  background-color: #fff !important;
+}
+
+// custom calendar today cell color
+.calendar-cell.today {
+  --cui-calendar-cell-today-color: var(--cui-info) !important;
+}
+
+// custom select week cursor pointer
+.select-week .calendar-row.current {
+  cursor: pointer;
+}

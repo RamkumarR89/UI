@@ -1,0 +1,126 @@
+// Card header styles
+.card-header {
+  border-bottom: none;
+  
+  // Light mode specific styles
+  &.bg-primary {
+    background-color: #0d6efd !important;
+  }
+}
+
+h4 {
+  color: #fff;
+  font-weight: 600;
+}
+
+/* Vertical Stepper */
+.vertical-stepper {
+  width: 100%;
+  margin-bottom: 30px;
+}
+
+/* SQL Result Display */
+.sql-result-container {
+  border-radius: 0.25rem;
+  overflow: hidden;
+  margin-bottom: 1rem;
+}
+
+.sql-result-header {
+  font-weight: normal;
+  font-size: 0.9rem;
+}
+
+pre {
+  margin-bottom: 0;
+  white-space: pre-wrap;
+  font-family: monospace;
+  color: #3b7ddd;
+  font-size: 1rem;
+}
+
+.stepper-steps {
+  position: relative;
+  width: 100%;
+}
+
+// Horizontal lines connecting steps
+.stepper-steps::before {
+  content: '';
+  position: absolute;
+  top: 15px;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background-color: #ccc;
+  z-index: 1;
+}
+
+.step {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  position: relative;
+  z-index: 2;
+}
+
+.step-circle {
+  width: 30px;
+  height: 30px;
+  background-color: #f0f0f0;
+  border-radius: 50%;  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
+  font-size: 14px;
+  border: 2px solid #dee2e6;
+}
+
+.step.active .step-circle {
+  background-color: #fff;
+  border-color: var(--cui-primary);
+  color: var(--cui-primary);
+}
+
+.step.completed .step-circle {
+  background-color: var(--cui-success);
+  border-color: var(--cui-success);
+  color: #fff;
+}
+
+.step-label {
+  font-size: 0.875rem;
+  color: #6c757d;
+  margin-top: 0.5rem;
+}
+
+/* Report name suggestions */
+.report-name-suggestions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 15px;
+}
+
+.report-name-suggestion {
+  cursor: pointer;
+  transition: all 0.2s ease;
+  
+  &:hover {
+    background-color: var(--cui-primary) !important;
+    color: white !important;
+    transform: translateY(-2px);
+  }
+  
+  &:active {
+    transform: translateY(1px);
+  }
+}
+
+.step-content {
+  padding: 15px 0;
+}
+
+.invalid-feedback {
+  display: block;
+}

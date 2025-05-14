@@ -1,0 +1,276 @@
+<!-- filepath: d:\RAM_LEARN\Ram backup\UI\src\app\views\report-details\report-details.component.html -->
+<div class="animated fadeIn">
+  <div class="row">
+    <div class="col-md-12">
+      <div class="card shadow-sm">
+        <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">
+          <h4 class="m-0">{{ getStepTitle() }}</h4>
+          <div>
+            <span class="badge bg-light text-dark me-2">Step {{ currentStep }} of 4</span>
+          </div>
+        </div>
+        
+        <div class="card-body">
+          <!-- Progress steps -->
+          <div class="vertical-stepper mb-4">
+            <div class="stepper-steps d-flex justify-content-between">
+              <div class="step" [class.active]="currentStep === 1" [class.completed]="currentStep > 1 || step1Completed">
+                <div class="step-circle">1</div>
+                <div class="step-label">Enter Report Name</div>
+              </div>
+              <div class="step" [class.active]="currentStep === 2" [class.completed]="currentStep > 2 || step2Completed">
+                <div class="step-circle">2</div>
+                <div class="step-label">Message With GenerateSql</div>
+              </div>
+              <div class="step" [class.active]="currentStep === 3" [class.completed]="currentStep > 3 || step3Completed">
+                <div class="step-circle">3</div>
+                <div class="step-label">Chart Configuration</div>
+              </div>
+              <div class="step" [class.active]="currentStep === 4" [class.completed]="currentStep > 4 || step4Completed">
+                <div class="step-circle">4</div>
+                <div class="step-label">Review & Submit</div>
+              </div>
+            </div>
+          </div>
+          
+          <!-- Success alert -->
+          <c-alert color="success" *ngIf="savedSuccess" dismissible>
+            Report saved successfully!
+          </c-alert>
+
+          <!-- Form -->
+          <form [formGroup]="reportForm">
+            <div class="step-content">
+              <!-- Step 1: Report Name -->
+              <div *ngIf="currentStep === 1">
+                <div class="form-group mb-4">
+                  <label for="reportName" class="form-label">Report Name</label>
+                  <input 
+                    type="text" 
+                    class="form-control" 
+                    id="reportName" 
+                    formControlName="reportName"
+                    placeholder="Enter report name"
+                    [ngClass]="{'is-invalid': reportName.invalid && reportName.touched}">
+                  <div *ngIf="reportName.invalid && reportName.touched" class="invalid-feedback">
+                    <div *ngIf="reportName.errors?.['required']">Report name is required</div>
+                    <div *ngIf="reportName.errors?.['minlength']">Report name must be at least 3 characters</div>
+                  </div>
+                </div>
+                
+                <div class="form-group mb-4">
+                  <label for="description" class="form-label">Description</label>
+                  <textarea 
+                    class="form-control" 
+                    id="description" 
+                    formControlName="description"
+                    rows="3" 
+                    placeholder="Brief description of your report"></textarea>
+                </div>
+                
+                <div class="mt-4 mb-3">
+                  <label class="form-label">Suggested Report Names:</label>
+                  <div class="report-name-suggestions d-flex flex-wrap gap-2">
+                    <div *ngFor="let suggestion of reportNameSuggestions" 
+                        class="report-name-suggestion badge bg-light text-dark p-2 cursor-pointer" 
+                        (click)="selectReportName(suggestion)">
+                      {{ suggestion }}
+                    </div>
+                  </div>
+                </div>
+
+                <div class="d-flex justify-content-between mt-3">
+                  <div></div>
+                  <div class="d-flex gap-2">
+                    <button cButton color="primary" (click)="saveReport()" [disabled]="reportForm.invalid || isSaving">
+                      <div class="d-flex align-items-center">
+                        <span *ngIf="isSaving" class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
+                        <svg *ngIf="!isSaving" cIcon name="cil-save" size="sm" class="me-2"></svg>
+                        {{ isSaving ? 'Saving...' : 'Save Report' }}
+                      </div>
+                    </button>
+                  </div>
+                </div>
+                
+                <!-- Success message -->
+                <div *ngIf="savedSuccess" class="alert alert-success mt-3" role="alert">
+                  <div class="d-flex align-items-center">
+                    <svg cIcon name="cil-check-circle" size="sm" class="me-2"></svg>
+                    <div>
+                      <strong>Report saved successfully!</strong>
+                      <div *ngIf="isNextStepEnabled">You can now proceed to the next step.</div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              
+              <!-- Step 2: SQL Message -->
+              <div *ngIf="currentStep === 2">
+
+                  <!-- SQL Result display section -->
+                <div class="form-group mb-3" *ngIf="sqlResult">
+                  <!-- <label for="sqlResult" class="form-label">SQL Result</label> -->
+                  <div class="sql-result-container">
+                    <div class="sql-result-header bg-light p-2 border rounded-top d-flex alignments-center">
+                      <span class="text-muted">sql</span>
+                    </div>
+                    <div class="p-3 border border-top-0 rounded-bottom bg-light">
+                      <pre class="mb-0 text-primary">{{ sqlResult }}</pre>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Removed the Generated SQL field as it is no longer needed -->
+                <div class="d-flex mt-3">
+                  <div class="flex-grow-1">
+                    <label for="sqlMessage" class="form-label">Message</label>
+                    <textarea 
+                      class="form-control" 
+                      id="sqlMessage" 
+                      formControlName="sqlMessage"
+                      rows="5" 
+                      placeholder="Enter your message for SQL generation"
+                      [ngClass]="{'is-invalid': sqlMessage.invalid && sqlMessage.touched}"></textarea>
+                    <div *ngIf="sqlMessage.invalid && sqlMessage.touched" class="invalid-feedback">
+                      <div *ngIf="sqlMessage.errors?.['required']">SQL message is required</div>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Adjusted buttons to align on the right side -->
+                <div class="d-flex justify-content-between mt-3">
+                  <div></div> <!-- Empty div to push buttons to the right -->
+                  <div>
+                    <button cButton color="primary" [disabled]="reportForm.invalid" (click)="onGenerateSql()">
+                      <svg cIcon name="cil-code" size="sm" class="me-2"></svg>
+                      Generate
+                    </button>
+                    <button cButton color="success" class="ms-2" [disabled]="reportForm.invalid || !sqlResult" (click)="saveSql()">
+                      <svg cIcon name="cil-save" size="sm" class="me-2"></svg>
+                      Save SQL
+                    </button>
+                  </div>
+                </div>
+              </div>
+              
+              <!-- Step 3: Chart Configuration -->
+              <div *ngIf="currentStep === 3" class="step-container">
+                <h3>Step 3: Chart Configuration</h3>
+                <form [formGroup]="chartConfigForm">
+                  <div class="form-group">
+                    <label for="type">Chart Type</label>
+                    <select id="type" formControlName="type" class="form-control">
+                      <option value="1">Bar</option>
+                      <option value="2">Line</option>
+                      <option value="3">Pie</option>
+                    </select>
+                  </div>
+
+                  <div class="form-group">
+                    <label for="xAxisField">X-Axis Field</label>
+                    <input id="xAxisField" type="text" formControlName="xAxisField" class="form-control" />
+                  </div>
+
+                  <div class="form-group">
+                    <label for="yAxisField">Y-Axis Field</label>
+                    <input id="yAxisField" type="text" formControlName="yAxisField" class="form-control" />
+                  </div>
+
+                  <div class="form-group">
+                    <label for="optionsJson">Options (JSON)</label>
+                    <textarea id="optionsJson" formControlName="optionsJson" class="form-control"></textarea>
+                  </div>
+
+                  <div class="form-group">
+                    <label for="filtersJson">Filters (JSON)</label>
+                    <textarea id="filtersJson" formControlName="filtersJson" class="form-control"></textarea>
+                  </div>
+                </form>
+                <div class="d-flex justify-content-end mt-3">
+                  <button cButton color="primary" class="mt-3" (click)="saveChartConfig()" [disabled]="chartConfigForm.invalid">
+                    <svg cIcon name="cil-save" size="sm" class="me-2"></svg>
+                    Save Chart
+                  </button>
+                </div>
+              </div>
+              
+              <!-- Step 4: Review -->
+              <div *ngIf="currentStep === 4">
+                <div class="card mb-4">
+                  <div class="card-header bg-light">
+                    <strong>Report Summary</strong>
+                  </div>
+                  <div class="card-body">
+                    <div class="row">
+                      <div class="col-md-8">
+                        <dl class="row">
+                           <dt class="col-sm-3">Session ID</dt>
+                          <dd class="col-sm-9">
+                            <span class="text-success" *ngIf="getCurrentSessionId()">{{ getCurrentSessionId() }}</span>
+                            <span class="text-danger" *ngIf="!getCurrentSessionId()">No session ID</span>
+                          </dd>
+                          <dt class="col-sm-3">Report Name</dt>
+                          <dd class="col-sm-9">{{ reportForm.value.reportName }}</dd>
+                          <dt class="col-sm-3">Description</dt>
+                          <dd class="col-sm-9">{{ reportForm.value.description || 'No description provided' }}</dd>
+                          <dt class="col-sm-3">SQL Message</dt>
+                          <dd class="col-sm-9">{{ reportForm.value.sqlMessage || 'No SQL message provided' }}</dd>
+                          <dt class="col-sm-3">SQL Result</dt>
+                          <dd class="col-sm-9">
+                            <div class="sql-result-container" *ngIf="reportForm.value.sqlResult">
+                              <div class="sql-result-header bg-light p-2 border rounded-top">
+                                <span class="text-muted">sql</span>
+                              </div>
+                              <div class="p-3 border border-top-0 rounded-bottom bg-light">
+                                <pre class="mb-0 text-primary">{{ reportForm.value.sqlResult }}</pre>
+                              </div>
+                            </div>
+                            <span *ngIf="!reportForm.value.sqlResult" class="text-muted">No SQL result generated</span>
+                          </dd>
+                        </dl>
+                      </div>
+                      <div class="col-md-4">
+                        <div class="card border-0 bg-light">
+                          <div class="card-header pb-1 pt-2 bg-light border-0"><strong>Chart</strong></div>
+                          <div class="card-body pt-2 pb-2">
+                            <div class="mb-2"><strong>Type:</strong> {{ chartConfigForm.get('type')?.value === 1 ? 'Bar' : chartConfigForm.get('type')?.value === 2 ? 'Line' : 'Pie' }}</div>
+                            <div class="mb-2"><strong>X-Axis Field:</strong> {{ chartConfigForm.get('xAxisField')?.value }}</div>
+                            <div class="mb-2"><strong>Y-Axis Field:</strong> {{ chartConfigForm.get('yAxisField')?.value }}</div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="d-flex justify-content-end mt-3">
+                  <button cButton color="success" (click)="submitReport()" [disabled]="reportForm.invalid">
+                    Publish Report
+                    <svg cIcon name="cil-check" size="sm" class="ms-2"></svg>
+                  </button>
+                </div>
+              </div>
+              
+              <!-- Navigation buttons -->
+              <div class="d-flex justify-content-between mt-4">
+                <div class="d-flex gap-2">
+                  <button cButton color="secondary" *ngIf="currentStep > 1" (click)="prevStep()" [disabled]="isSaving">
+                    <svg cIcon name="cil-arrow-left" size="sm" class="me-2"></svg>
+                    Previous
+                  </button>
+                </div>
+                <button cButton color="primary" *ngIf="currentStep < 4" (click)="nextStep()"
+                  [disabled]="!isNextStepButtonEnabled() || 
+                            (currentStep === 1 && reportForm.invalid) || 
+                            (currentStep === 2 && reportForm.get('sqlMessage')?.invalid) || 
+                            (currentStep === 3 && chartConfigForm.invalid)">
+                  Next Step
+                  <svg cIcon name="cil-arrow-right" size="sm" class="ms-2"></svg>
+                </button>
+              </div>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

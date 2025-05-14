@@ -1,0 +1,145 @@
+/* Stepper styles */
+.step-content {
+  padding: 15px 0;
+}
+
+.step-navigation {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 20px;
+}
+
+.progress-group {
+  margin-bottom: 1rem;
+}
+
+h5 {
+  margin-bottom: 1.5rem;
+  color: #4f5d73;
+  font-weight: 600;
+}
+
+/* SQL Result Display */
+.sql-result-container {
+  border-radius: 0.25rem;
+  overflow: hidden;
+  margin-bottom: 1rem;
+}
+
+.sql-result-header {
+  font-weight: normal;
+  font-size: 0.9rem;
+  border-bottom: none !important;
+  background-color: #f8f9fa !important;
+}
+
+pre {
+  margin-bottom: 0;
+  white-space: pre-wrap;
+  font-family: monospace;
+  color: #963896;  /* Purple color like in the image */
+  font-size: 1rem;
+}
+
+.invalid-feedback {
+  display: block;
+}
+
+.card-header {
+  background-color: #f8f9fa;
+}
+
+/* Report name suggestions */
+.report-name-suggestions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-bottom: 15px;
+}
+
+.report-name-suggestion {
+  padding: 8px 15px;
+  background-color: #f0f3f5;
+  border-radius: 4px;
+  cursor: pointer;
+  border: 1px solid #e4e7ea;
+  transition: all 0.2s ease;
+  font-size: 0.9rem;
+  
+  &:hover {
+    background-color: #d9e7f7;
+    border-color: #20a8d8;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  }
+  
+  &:active {
+    transform: translateY(1px);
+  }
+}
+
+/* Step indicators */
+.step-indicators {
+  position: relative;
+  padding: 20px 0 10px;
+}
+
+.step-indicators:before {
+  content: '';
+  position: absolute;
+  top: 35px;
+  left: 20%;
+  width: 60%;
+  height: 2px;
+  background-color: #e4e7ea;
+  z-index: 1;
+}
+
+.step-indicator {
+  position: relative;
+  z-index: 2;
+  cursor: pointer;
+}
+
+.step-circle {
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  background-color: #fff;
+  border: 2px solid #e4e7ea;
+  color: #73818f;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
+  margin-bottom: 5px;
+  transition: all 0.3s;
+}
+
+.step-label {
+  font-size: 12px;
+  color: #73818f;
+  text-align: center;
+  max-width: 100px;
+  transition: all 0.3s;
+}
+
+.step-indicator.active .step-circle {
+  background-color: #20a8d8;
+  border-color: #20a8d8;
+  color: white;
+}
+
+.step-indicator.active .step-label {
+  color: #20a8d8;
+  font-weight: 600;
+}
+
+.step-indicator.completed .step-circle {
+  background-color: #4dbd74;
+  border-color: #4dbd74;
+  color: white;
+}
+
+.step-indicator.completed .step-label {
+  color: #4dbd74;
+}

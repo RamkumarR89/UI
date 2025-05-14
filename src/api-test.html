@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>API Test</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        h1 {
+            color: #2c3e50;
+            border-bottom: 1px solid #eaeaea;
+            padding-bottom: 10px;
+        }
+        .card {
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            padding: 15px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+        .card-header {
+            font-weight: bold;
+            margin-bottom: 10px;
+            border-bottom: 1px solid #eaeaea;
+            padding-bottom: 10px;
+        }
+        button {
+            background-color: #3498db;
+            color: white;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 4px;
+            cursor: pointer;
+            margin-top: 10px;
+        }
+        button:hover {
+            background-color: #2980b9;
+        }
+        input {
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            margin-right: 10px;
+            width: 200px;
+        }
+        pre {
+            background-color: #f8f9fa;
+            border: 1px solid #eaeaea;
+            padding: 10px;
+            border-radius: 4px;
+            white-space: pre-wrap;
+            max-height: 300px;
+            overflow: auto;
+        }
+        .success {
+            color: #27ae60;
+            font-weight: bold;
+        }
+        .error {
+            color: #e74c3c;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <h1>API Test Page</h1>
+    
+    <div class="card">
+        <div class="card-header">1. Create Session API Test</div>
+        <div>
+            <label for="userId">User ID:</label>
+            <input type="number" id="userId" value="1" />
+        </div>
+        <button id="testCreateSession">Test Create Session API</button>
+        <pre id="createSessionResult">Results will appear here</pre>
+    </div>
+    
+    <div class="card">
+        <div class="card-header">2. Update Report Name API Test</div>
+        <div>
+            <label for="sessionId">Session ID:</label>
+            <input type="text" id="sessionId" placeholder="Enter session ID from step 1" />
+        </div>
+        <div style="margin-top: 10px;">
+            <label for="reportName">Report Name:</label>
+            <input type="text" id="reportName" value="Test Report" />
+        </div>
+        <button id="testUpdateReportName">Test Update Report Name API</button>
+        <pre id="updateReportNameResult">Results will appear here</pre>
+    </div>
+
+    <script>
+        // Create Session API Test
+        document.getElementById('testCreateSession').addEventListener('click', function() {
+            const apiUrl = 'https://localhost:5002/api/Chat/create-session';
+            const userId = document.getElementById('userId').value;
+            const data = { userId: parseInt(userId) };
+            
+            const resultElem = document.getElementById('createSessionResult');
+            resultElem.textContent = 'Sending request to ' + apiUrl + '...';
+            resultElem.textContent += '\nRequest data: ' + JSON.stringify(data);
+            
+            fetch(apiUrl, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(data)
+            })
+            .then(response => {
+                resultElem.textContent += '\nResponse status: ' + response.status;
+                return response.json();
+            })
+            .then(data => {
+                resultElem.textContent += '\nResponse data: ' + JSON.stringify(data, null, 2);
+                resultElem.innerHTML += '\n\n<span class="success">✓ Success! Session ID: ' + data.sessionId + '</span>';
+                
+                // Auto-populate the sessionId field for the next test
+                document.getElementById('sessionId').value = data.sessionId;
+            })
+            .catch(error => {
+                resultElem.textContent += '\nError: ' + error.message;
+                resultElem.innerHTML += '\n\n<span class="error">✗ Failed!</span>';
+            });
+        });
+        
+        // Update Report Name API Test
+        document.getElementById('testUpdateReportName').addEventListener('click', function() {
+            const sessionId = document.getElementById('sessionId').value;
+            if (!sessionId) {
+                alert('Please enter a session ID');
+                return;
+            }
+            
+            const reportName = document.getElementById('reportName').value;
+            const apiUrl = 'https://localhost:5002/api/Chat/update-report-name';
+            const data = { 
+                sessionId: sessionId,
+                reportName: reportName
+            };
+            
+            const resultElem = document.getElementById('updateReportNameResult');
+            resultElem.textContent = 'Sending request to ' + apiUrl + '...';
+            resultElem.textContent += '\nRequest data: ' + JSON.stringify(data);
+            
+            fetch(apiUrl, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(data)
+            })
+            .then(response => {
+                resultElem.textContent += '\nResponse status: ' + response.status;
+                return response.json();
+            })
+            .then(data => {
+                resultElem.textContent += '\nResponse data: ' + JSON.stringify(data, null, 2);
+                resultElem.innerHTML += '\n\n<span class="success">✓ Success!</span>';
+            })
+            .catch(error => {
+                resultElem.textContent += '\nError: ' + error.message;
+                resultElem.innerHTML += '\n\n<span class="error">✗ Failed!</span>';
+            });
+        });
+    </script>
+</body>
+</html>

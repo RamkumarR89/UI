@@ -1,0 +1,101 @@
+<div class="card">  <div class="card-header">
+    <h4>Report Stepper</h4>    <div class="progress-group mb-2">
+      <div class="progress">
+        <c-progress-bar [value]="(currentStep / totalSteps) * 100"></c-progress-bar>
+      </div>
+      <div class="text-muted">Step {{ currentStep }} of {{ totalSteps }}</div>
+    </div>
+    <div class="step-indicators d-flex justify-content-between mb-3">
+      <div 
+        *ngFor="let step of steps" 
+        class="step-indicator d-flex flex-column align-items-center"
+        [class.active]="step.active"
+        [class.completed]="step.complete"
+        (click)="setStep(step.id)">
+        <div class="step-circle">{{ step.id }}</div>
+        <div class="step-label">{{ step.name }}</div>
+      </div>
+    </div>
+  </div>
+  <div class="card-body">
+    <form [formGroup]="reportForm">
+      <ng-container *ngIf="steps[0].active">        <div class="step-content">
+          <h5>Enter Report Name</h5>
+          <div class="form-group mb-3">
+            <label for="reportName" class="form-label">Report Name</label>
+            <input 
+              type="text" 
+              class="form-control" 
+              id="reportName" 
+              formControlName="reportName"
+              placeholder="Enter report name"
+              [ngClass]="{'is-invalid': reportName.invalid && reportName.touched}">
+            <div *ngIf="reportName.invalid && reportName.touched" class="invalid-feedback">
+              <div *ngIf="reportName.errors?.['required']">Report name is required</div>
+              <div *ngIf="reportName.errors?.['minlength']">Report name must be at least 3 characters</div>
+            </div>
+          </div>
+
+          <div class="mt-3 mb-3">
+            <label class="form-label">Suggested Report Names:</label>
+            <div class="report-name-suggestions">
+              <div *ngFor="let suggestion of reportNameSuggestions" 
+                   class="report-name-suggestion" 
+                   (click)="selectReportName(suggestion)">
+                {{ suggestion }}
+              </div>
+            </div>
+          </div>          <div class="d-flex justify-content-between mt-3">
+            <button cButton color="primary" (click)="saveReport()">
+              <svg cIcon name="cil-save" size="sm" class="me-2"></svg>
+              Save Report
+            </button>
+            <button cButton color="primary" (click)="nextStep()">Next</button>
+          </div>
+        </div>
+      </ng-container>      <ng-container *ngIf="steps[1].active">
+        <div class="step-content">
+          <h5>Message With GenerateSql</h5>
+          <div class="form-group mb-3">
+            <label for="sqlMessage" class="form-label">SQL Message</label>
+            <textarea 
+              class="form-control" 
+              id="sqlMessage" 
+              formControlName="sqlMessage"
+              rows="5" 
+              placeholder="Enter your message for SQL generation"
+              [ngClass]="{'is-invalid': sqlMessage.invalid && sqlMessage.touched}"></textarea>
+            <div *ngIf="sqlMessage.invalid && sqlMessage.touched" class="invalid-feedback">
+              <div *ngIf="sqlMessage.errors?.['required']">SQL message is required</div>
+            </div>
+          </div>
+            <!-- SQL Result display section -->
+          <div class="form-group mb-3" *ngIf="sqlResult">
+            <label for="sqlResult" class="form-label">SQL Result</label>
+            <div class="sql-result-container">
+              <div class="sql-result-header bg-light p-2 border rounded-top d-flex align-items-center">
+                <span class="text-muted">sql</span>
+              </div>
+              <div class="p-3 border border-top-0 rounded-bottom bg-light">
+                <pre class="mb-0 text-primary">{{ sqlResult }}</pre>
+              </div>
+            </div>
+          </div>
+          
+          <div class="d-flex justify-content-between mt-3">
+            <button cButton color="secondary" (click)="prevStep()">Previous1</button>            <div>
+              <button cButton color="primary" [disabled]="reportForm.invalid" (click)="onGenerateSql()">
+                <svg cIcon name="cil-code" size="sm" class="me-2"></svg>
+                Generate
+              </button>
+              <button cButton color="success" class="ms-2" [disabled]="reportForm.invalid || !sqlResult" (click)="saveReport()">
+                <svg cIcon name="cil-save" size="sm" class="me-2"></svg>
+                Save2
+              </button>
+            </div>
+          </div>
+        </div>
+      </ng-container>
+    </form>
+  </div>
+</div>

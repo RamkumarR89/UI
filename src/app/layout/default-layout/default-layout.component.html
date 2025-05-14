@@ -1,0 +1,35 @@
+<!-- filepath: d:\RAM_LEARN\Ram backup\UI\src\app\layout\default-layout\default-layout.component.html -->
+<!-- Sidebar removed for a cleaner layout -->
+
+<!--main-->
+<div class="wrapper d-flex flex-column min-vh-100 bg-light">
+  <!--app-header - simplified-->
+  <header class="header header-sticky bg-white border-bottom p-3 mb-4">
+    <div class="d-flex justify-content-between align-items-center">
+      <div class="logo-container">
+        <a [routerLink]="['/']" class="text-decoration-none">
+          <h1 class="m-0 text-primary fw-bold">Report Builder</h1>
+        </a>      </div>     
+       <!-- <div class="d-flex align-items-center gap-3">
+        <a [routerLink]="['/report-details']" (click)="createNewReport($event)" class="btn btn-sm btn-primary">
+          <svg cIcon name="cil-plus" size="sm" class="me-1"></svg> Create New Report1
+        </a>
+      </div> -->
+    </div>
+  </header>
+  
+  <!--app-body-->
+  <div class="body flex-grow-1">
+    <c-container breakpoint="lg" class="h-auto px-4">
+      <!-- Router outlet will display either the report-list component or other components -->
+      <router-outlet></router-outlet>
+    </c-container>
+  </div>
+  
+  <!--app footer-->
+  <footer class="footer bg-white border-top p-3 mt-auto">
+    <div class="text-center text-muted">
+      <span>Report Builder &copy; 2025</span>
+    </div>
+  </footer>
+</div>

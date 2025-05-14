@@ -1,0 +1,107 @@
+<div class="animated fadeIn">  <div class="card shadow-sm mb-4">
+    <div class="card-header bg-white d-flex justify-content-between align-items-center">
+      <h5 class="mb-0">Reports</h5>
+      <button cButton color="primary" (click)="createNewReport($event)" type="button">
+        <svg cIcon name="cil-plus" size="sm" class="me-2"></svg>
+        Create New Report
+      </button>
+    </div>
+    <div class="card-body">
+      <!-- Loading state -->
+      <div *ngIf="isLoading" class="text-center py-5">
+        <div class="spinner-border text-primary" role="status">
+          <span class="visually-hidden">Loading...</span>
+        </div>
+      </div>
+      
+      <!-- Empty state -->
+      <div *ngIf="!isLoading && reports.length === 0" class="text-center py-5">
+        <div class="mb-3">
+          <svg cIcon name="cil-folder-open" width="48" height="48" class="text-muted"></svg>
+        </div>        <h5 class="text-muted">No reports found</h5>
+        <!-- <p class="text-muted mb-4">Create a new report to get started</p>
+        <button cButton color="primary" (click)="createNewReport()">
+          <svg cIcon name="cil-plus" size="sm" class="me-2"></svg>
+          Create New Report
+        </button> -->
+      </div>
+      
+      <!-- Report list table -->
+      <table cTable hover *ngIf="!isLoading && reports.length > 0" class="mb-0">
+        <thead>
+          <tr>
+            <th>Report Name</th>
+            <th>Created Date</th>
+            <th>Status</th>
+            <th class="text-end">Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let report of reports" class="cursor-pointer" (click)="openReport(report)">
+            <td>
+              <div class="d-flex align-items-center">
+                <svg cIcon name="cil-file" class="text-primary me-2"></svg>
+                {{ report.reportName || 'Untitled Report' }}
+              </div>
+            </td>
+            <td>{{ formatDate(report.createdDate) }}</td>
+            <td>
+              <span class="badge bg-success">Active</span>
+            </td>
+            <td class="text-end">
+              <button cButton color="primary" variant="ghost" size="sm" (click)="saveReport(report); $event.stopPropagation()" title="Save Report">
+                <svg cIcon name="cil-save" size="sm"></svg>
+              </button>
+              <button cButton color="danger" variant="ghost" size="sm" (click)="deleteReport(report.id!, $event)" title="Delete Report">
+                <svg cIcon name="cil-trash" size="sm"></svg>
+              </button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+  
+  <!-- Feature Highlight Cards -->
+  <div class="row g-4">
+    <div class="col-md-4">
+      <div class="card h-100 shadow-sm">
+        <div class="card-body">
+          <div class="mb-3 text-primary">
+            <svg cIcon name="cil-notes" width="24" height="24"></svg>
+          </div>
+          <h5 class="card-title">Create Reports</h5>
+          <p class="card-text">Create custom reports with our simple and intuitive interface. Add descriptions, SQL queries, and more.</p>
+          <button cButton color="primary" (click)="openSaveReportDialog()" class="mt-2">
+            <svg cIcon name="cil-save" size="sm" class="me-2"></svg>
+            Save Report
+          </button>
+        </div>
+      </div>
+    </div>
+    
+    <div class="col-md-4">
+      <div class="card h-100 shadow-sm">
+        <div class="card-body">
+          <div class="mb-3 text-primary">
+            <svg cIcon name="cil-chart" width="24" height="24"></svg>
+          </div>
+          <h5 class="card-title">Analyze Data</h5>
+          <p class="card-text">Transform your data into meaningful insights with advanced analytics and visualization tools.</p>
+        </div>
+      </div>
+    </div>
+    
+    <div class="col-md-4">
+      <div class="card h-100 shadow-sm">
+        <div class="card-body">
+          <div class="mb-3 text-primary">
+            <svg cIcon name="cil-share" width="24" height="24"></svg>
+          </div>
+          <h5 class="card-title">Share & Export</h5>
+          <p class="card-text">Share your reports with team members or export them in various formats for presentations.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
