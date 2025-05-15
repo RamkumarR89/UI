@@ -30,7 +30,7 @@ export interface UpdateReportNameResponse {
 })
 export class ReportService {
   // API base URL - make sure this is correct
-  private apiBaseUrl = 'https://localhost:5002/api/Chat';
+  private apiBaseUrl = 'http://localhost:5003/api/Chat';
   private currentReportSubject = new BehaviorSubject<ReportData | null>(null);
   currentReport$ = this.currentReportSubject.asObservable();
 

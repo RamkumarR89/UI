@@ -95,7 +95,7 @@
     <script>
         // Create Session API Test
         document.getElementById('testCreateSession').addEventListener('click', function() {
-            const apiUrl = 'https://localhost:5002/api/Chat/create-session';
+            const apiUrl = 'http://localhost:5003/api/Chat/create-session';
             const userId = document.getElementById('userId').value;
             const data = { userId: parseInt(userId) };
             
@@ -136,7 +136,7 @@
             }
             
             const reportName = document.getElementById('reportName').value;
-            const apiUrl = 'https://localhost:5002/api/Chat/update-report-name';
+            const apiUrl = 'http://localhost:5003/api/Chat/update-report-name';
             const data = { 
                 sessionId: sessionId,
                 reportName: reportName

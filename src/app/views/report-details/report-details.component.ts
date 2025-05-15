@@ -449,25 +449,47 @@ export class ReportDetailsComponent implements OnInit {
   }
 
   /**
-   * Submits the final report to the backend
+   * Submits the final report to the backend by marking it as published
+   * This ONLY calls the update-workflow endpoint and does NOT trigger create-session
    */
   submitReport(): void {
-    // Save the report first
-    this.saveReport();
-    // Get the current report data
-    const currentReport = this.reportService.getCurrentReport();
-    // Check if we have all required data
-    if (!currentReport?.sessionId) {
-      alert('No active session. Please start a new report.');
+    console.log("Starting submitReport");
+    
+    // Set loading state
+    this.isSaving = true;
+    
+    // Get session ID directly from the displayed value in UI
+    const sessionId = this.getCurrentSessionId();
+    if (!sessionId) {
+      console.error("No session ID found");
+      alert("Session ID not found. Please refresh the page and try again.");
+      this.isSaving = false;
       return;
     }
-    console.log('Submitting report with data:', currentReport);
-    // In a real application, we would call an API to submit the report
-    // For now, just show a success message
-    alert('Report submitted successfully!');
-    this.step4Completed = true;
-    // Navigate to the reports list
-    this.router.navigate(['/reports']);
+    
+    console.log("Publishing report with ID:", sessionId);
+    
+    // Create payload with just the fields needed for publishing
+    const payload = {
+      ChatSessionId: parseInt(sessionId),
+      IsPublished: true
+    };
+    
+    // Direct API call to update-workflow (without any saveReport or createSession)
+    this.http.post('http://localhost:5003/api/Chat/update-workflow', payload).subscribe(
+      (response) => {
+        console.log("Report published successfully:", response);
+        this.isSaving = false;
+        alert('Report published successfully!');
+        this.step4Completed = true;
+        this.router.navigate(['/reports']);
+      },
+      (error) => {
+        console.error("Error publishing report:", error);
+        this.isSaving = false;
+        alert('Failed to publish report. Please try again.');
+      }
+    );
   }
 
   /**
@@ -499,7 +521,7 @@ export class ReportDetailsComponent implements OnInit {
       Message: sqlMessage
     };
   
-    this.http.post('https://localhost:5002/api/Chat/send-message', payload).subscribe(
+    this.http.post('http://localhost:5003/api/Chat/send-message', payload).subscribe(
       (response: any) => {
         // Ensure sqlResult is always a string
         this.sqlResult = typeof response.generatedSql === 'string' ? response.generatedSql : 'select * from products';
@@ -526,7 +548,7 @@ export class ReportDetailsComponent implements OnInit {
       Message: sqlMessage
     };
   
-    this.http.post('https://localhost:5002/api/Chat/update-message-or-generated-sql', payload, { responseType: 'text' }).subscribe(
+    this.http.post('http://localhost:5003/api/Chat/update-message-or-generated-sql', payload, { responseType: 'text' }).subscribe(
       (response: any) => {
         console.log('SQL saved successfully:', response);
         alert('SQL has been saved successfully!');
@@ -570,7 +592,7 @@ export class ReportDetailsComponent implements OnInit {
       Options: options,
       Filters: filters
     };
-    this.http.post('https://localhost:5002/api/Chat/update-chart', payload).subscribe(
+    this.http.post('http://localhost:5003/api/Chat/update-chart', payload).subscribe(
       (response: any) => {
         alert('Chart configuration saved successfully!');
       },

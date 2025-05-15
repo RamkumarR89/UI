@@ -206,7 +206,7 @@
                         <dl class="row">
                            <dt class="col-sm-3">Session ID</dt>
                           <dd class="col-sm-9">
-                            <span class="text-success" *ngIf="getCurrentSessionId()">{{ getCurrentSessionId() }}</span>
+                            <span id="session-id-value" class="text-success" *ngIf="getCurrentSessionId()">{{ getCurrentSessionId() }}</span>
                             <span class="text-danger" *ngIf="!getCurrentSessionId()">No session ID</span>
                           </dd>
                           <dt class="col-sm-3">Report Name</dt>
@@ -243,9 +243,12 @@
                   </div>
                 </div>
                 <div class="d-flex justify-content-end mt-3">
-                  <button cButton color="success" (click)="submitReport()" [disabled]="reportForm.invalid">
-                    Publish Report
-                    <svg cIcon name="cil-check" size="sm" class="ms-2"></svg>
+                  <button cButton color="success" type="button" (click)="submitReport(); $event.preventDefault(); $event.stopPropagation();" [disabled]="reportForm.invalid || isSaving">
+                    <div class="d-flex align-items-center">
+                      <span *ngIf="isSaving" class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
+                      <span>{{ isSaving ? 'Publishing...' : 'Publish Report' }}</span>
+                      <svg *ngIf="!isSaving" cIcon name="cil-check" size="sm" class="ms-2"></svg>
+                    </div>
                   </button>
                 </div>
               </div>

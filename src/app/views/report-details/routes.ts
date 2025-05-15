@@ -1,9 +1,10 @@
 import { Routes } from '@angular/router';
+import { ReportDetailsComponent } from './report-details.component';
 
 export const routes: Routes = [
   {
     path: '',
-    loadComponent: () => import('./report-details.component').then(m => m.ReportDetailsComponent),
+    component: ReportDetailsComponent,
     data: {
       title: 'Report Details'
     }
